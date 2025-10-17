@@ -20,6 +20,16 @@ export default function Home() {
         let result = value.replace(/[^\d.]/g, "")
         e.currentTarget.value = result;
     }
+    function calculate(formData) {
+        const mortAmt = formData.get("mort-amount");
+        const mortTerm = formData.get("mortgage-term");
+        const mortRate = formData.get("int-rate");
+        const mortType = formData.get("input-radio-mort-type")
+
+        if (!mortAmt || !mortTerm || !mortRate || !mortType) {
+            console.log("error")
+        }
+    }
     return (
         <main className="min-h-screen bg-(--slate-100) md:flex items-center justify-center ">
 
@@ -30,16 +40,17 @@ export default function Home() {
                         <button className=" w-max underline text-(--slate-700) hover:cursor-pointer">Clear All</button>
                     </div>
 
-                    <form action="" className="w-full space-y-4">
+                    <form action={calculate} className="w-full space-y-4">
 
                         <div className="" >
                             <label className="text-(--slate-700) mb-2 block" htmlFor="mort-amount">Mortgage Amount</label>
                             <div className="relative long-in ">
                                 <input
                                     onChange={handleNumberFormat}
-                                    className="border-[1px] w-full py-2 pl-16 font-bold focus:border-(--lime) focus:outline-(--lime) focus:outline-1 border-solid border-(--slate-300) rounded-sm" type="text"  name="mort-amount" id="mort-amount" />
+                                    className="border-[1px] w-full py-2 pl-16 font-bold focus:border-(--lime) focus:outline-(--lime) focus:outline-1 border-solid border-(--slate-300) rounded-sm" type="text" name="mort-amount" id="mort-amount" />
                                 <span className="absolute bg-(--slate-100) left-[1px] top-0 bottom-0 my-auto h-[calc(100%-2px)] w-12 px-2 flex justify-center rounded-tl-sm rounded-bl-sm items-center text-(--slate-700) font-bold ">£</span>
                             </div>
+                            <span className={`mort-amount-error hidden`}></span>
                         </div>
 
                         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -51,6 +62,7 @@ export default function Home() {
                                         className="border-1 overflow-hidden h-full w-full font-bold py-2 pl-4 focus:border-(--lime) focus:outline-(--lime)   focus:outline-1 border-solid border-(--slate-300) rounded-sm" type="text" name="mortgage-term" id="mortgage-term" />
                                     <span className="absolute bg-(--slate-100) right-[1px] top-0 bottom-0 my-auto h-[calc(100%-2px)] w-max px-2 flex justify-center rounded-tr-sm rounded-br-sm items-center text-(--slate-700) font-bold">years</span>
                                 </div>
+                                <span className="mortgage-term-error"></span>
                             </div>
 
                             <div>
@@ -61,6 +73,7 @@ export default function Home() {
                                         className="border-[1px] w-full py-2 pl-4 font-bold focus:border-(--lime) focus:outline-(--lime) focus:outline-1 border-solid border-(--slate-300) rounded-sm" type="text" name="int-rate" id="int-rate" />
                                     <span className="absolute bg-(--slate-100) right-[1px] top-0 bottom-0 my-auto h-[calc(100%-2px)] w-max px-2 flex justify-center rounded-tr-sm rounded-br-sm items-center text-(--slate-700) font-bold ">%</span>
                                 </div>
+                                <span className="int-rate-error"></span>
                             </div>
                         </div>
 
@@ -69,18 +82,18 @@ export default function Home() {
 
                             <label className="text-(--slate-900) font-bold container" htmlFor="input-radio-repayment">
                                 Repayment
-                                <input type="radio" name="input-radio-mort-type" id="input-radio-repayment" />
+                                <input type="radio" name="input-radio-mort-type" id="input-radio-repayment" value="Repayment" />
                                 <span className="checkmark"></span>
                             </label>
 
 
                             <label className="text-(--slate-900) font-bold container" htmlFor="input-radio-interest-only">
                                 Interest Only
-                                <input type="radio" name="input-radio-mort-type" id="input-radio-interest-only" />
+                                <input type="radio" name="input-radio-mort-type" id="input-radio-interest-only" value="Interest only" />
                                 <span className="checkmark"></span>
                             </label>
 
-
+                            <span className="mort-type-error"></span>
                         </div>
                         <button className="rounded-3xl w-full items-center justify-center gap-2 bg-(--lime) text-(--slate-900) font-bold flex py-2 px-4 md:w-max" type="submit">
                             <img src="/assets/images/icon-calculator.svg" alt="calculate" />
