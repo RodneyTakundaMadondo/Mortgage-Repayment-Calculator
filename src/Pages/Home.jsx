@@ -210,7 +210,7 @@ export default function Home() {
                         computation.monthlyRepayments === null ?
                             <div className="flex flex-col items-center gap-4 py-6 md:my-auto">
                                 <div className=" flex justify-center">
-                                    <img className="max-w-full max-h-full" src="/assets/images/illustration-empty.svg" alt="illustration empty" />
+                                    <img className="max-w-full max-h-full" src={`${base}/assets/images/illustration-empty.svg`} alt="illustration empty" />
                                 </div>
                                 <h3 className="text-white font-bold text-2xl">Results shown here</h3>
                                 <p className="text-center text-(--slate-300) max-w-80 md:max-w-[26rem]">
