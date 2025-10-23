@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function Home() {
-     const base = import.meta.env.BASE_URL;
+    const base = import.meta.env.BASE_URL;
     const [form, setForm] = useState({
         mortAmt: "",
         mortTerm: "",
@@ -198,7 +198,7 @@ export default function Home() {
                         </div>
 
                         <button className="hover:cursor-pointer opacity-100 transition-opacity duration-300 ease-in-out hover:opacity-50 rounded-3xl w-full items-center justify-center gap-2 bg-(--lime) text-(--slate-900) font-bold flex py-2 px-4 md:w-max" type="submit">
-                            <img src="/assets/images/icon-calculator.svg" alt="calculate" />
+                            <img src={`${base}/assets/images/icon-calculator.svg`} alt="calculate" />
                             Calculate Repayments</button>
                     </form>
 
