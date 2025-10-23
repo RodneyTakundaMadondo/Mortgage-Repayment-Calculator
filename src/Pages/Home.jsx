@@ -10,8 +10,8 @@ export default function Home() {
     })
     const [errors, setErrors] = useState({});
     const [computation, setComputation] = useState({
-        monthlyRepaymets: null,
-        totalToBePaid: null
+        monthlyRepayments: null,
+        totalToBePaid: null,
     });
 
     function handleNumberFormat(e) {
@@ -49,30 +49,15 @@ export default function Home() {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            let money = form.mortAmt;
-            let principleAmt = money.replace(/,/g, "");
-            let monthlyRate = form.mortRate / 12 / 100;
-            let payments = form.mortTerm * 12;
-
-            let monthlyPayment = (principleAmt * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -payments));
-            let formattedMonthlyPayment = monthlyPayment.toLocaleString("en-GB", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
-            let totYouPay = monthlyPayment * payments
-            let formattedTotYouPay = totYouPay.toLocaleString("en-GB", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            setComputation(prev => ({ ...prev, monthlyRepaymets: formattedMonthlyPayment, totalToBePaid: formattedTotYouPay }))
+            calculateRepayments()
         }
 
     }
+
     const handleClear = () => {
         setComputation({
-            monthlyRepaymets: null,
-            totalToBePaid: null
+            monthlyRepayments: null,
+            totalToBePaid: null,
         })
         setForm({
             mortAmt: "",
@@ -83,7 +68,40 @@ export default function Home() {
         setErrors({});
     }
 
+    function calculateRepayments() {
+        setComputation({ monthlyRepaymets: null, totalToBePaid: null });
+        let money = form.mortAmt;
+        let principleAmt = money.replace(/,/g, "");
+        let monthlyRate = form.mortRate / 12 / 100;
+        let payments = form.mortTerm * 12;
 
+        let monthlyPayment = (principleAmt * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -payments));
+        let formattedMonthlyPayment = formatNumbers(monthlyPayment);
+
+        let totYouPay = monthlyPayment * payments
+        let formattedTotYouPay = formatNumbers(totYouPay);
+
+        let totalInterestPaid = totYouPay - principleAmt;
+        let monthlyInterestPayments = totalInterestPaid / payments;
+        let formattedTotalInterestPaid = formatNumbers(totalInterestPaid);
+        let formattedMonthlyInterestPayments = formatNumbers(monthlyInterestPayments);
+
+        if (form.mortType === "repayment") {
+            setComputation({ monthlyRepayments: formattedMonthlyPayment, totalToBePaid: formattedTotYouPay })
+        } else {
+            setComputation({ monthlyRepayments: formattedMonthlyInterestPayments, totalToBePaid: formattedTotalInterestPaid })
+        }
+
+    }
+
+
+    const formatNumbers = (toBeFormated) => {
+        let ourValue = toBeFormated.toLocaleString("en-GB", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        return ourValue;
+    }
 
     return (
         <main className="min-h-screen bg-(--slate-100) md:flex items-center justify-center ">
@@ -186,22 +204,24 @@ export default function Home() {
 
                 </div>
 
-                <div className="bg-(--slate-900) md:flex-1 md:rounded-bl-[5rem] md:flex md:justify-center px-4 ">
-                    {Object.values(computation).every(val => val === null) ?
-                        <div className="flex flex-col items-center gap-4 py-6 md:my-auto">
-                            <div className=" flex justify-center">
-                                <img className="max-w-full max-h-full" src="/assets/images/illustration-empty.svg" alt="illustration empty" />
-                            </div>
-                            <h3 className="text-white font-bold text-2xl">Results shown here</h3>
-                            <p className="text-center text-(--slate-300) max-w-80 md:max-w-[26rem]">
-                                Complete the form and click "calculate
-                                repayments" to see what your monthly
-                                repayments would be.
-                            </p>
-                        </div> : ""}
+                <div className="bg-(--slate-900) md:flex-1 md:rounded-bl-[5rem] md:flex md:justify-center px-4 lg:px-8 ">
+                    {
+                        computation.monthlyRepayments === null ?
+                            <div className="flex flex-col items-center gap-4 py-6 md:my-auto">
+                                <div className=" flex justify-center">
+                                    <img className="max-w-full max-h-full" src="/assets/images/illustration-empty.svg" alt="illustration empty" />
+                                </div>
+                                <h3 className="text-white font-bold text-2xl">Results shown here</h3>
+                                <p className="text-center text-(--slate-300) max-w-80 md:max-w-[26rem]">
+                                    Complete the form and click "calculate
+                                    repayments" to see what your monthly
+                                    repayments would be.
+                                </p>
+                            </div> : ""
+                    }
 
                     {
-                        Object.values(computation).every(val => val != null) ?
+                        computation.monthlyRepayments !== null ?
                             <div className="results-wrapper py-6">
                                 <div className="space-y-4">
                                     <div className="space-y-4">
@@ -212,10 +232,10 @@ export default function Home() {
                                             click "calculate repayments" again.
                                         </p>
                                     </div>
-                                    <div className="bg-[#0e2431] px-4 py-4 space-y-4 rounded-md border-t-6 border-t-(--lime)">
-                                        <div className="space-y-2">
+                                    <div className="bg-[#0e2431] px-4 py-4 space-y-8 rounded-md border-t-4 border-t-(--lime)">
+                                        <div className="space-y-2 month-repay-box relative pb-4">
                                             <span className="text-(--slate-300) block">Your monthly repayments</span>
-                                            <span className="text-(--lime) font-bold text-3xl">£<span>{computation.monthlyRepaymets}</span></span>
+                                            <span className="text-(--lime) font-bold text-3xl lg:text-5xl">£<span>{computation.monthlyRepayments}</span></span>
                                         </div>
 
                                         <div className="space-y-2">

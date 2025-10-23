@@ -17,41 +17,56 @@ body {
   background-color: var(--lime);
 }
 
-.container{
-    @apply block relative pl-[50px] py-3 mb-3 cursor-pointer border-solid border-1 border-(--slate-300)
+.container {
+  @apply block relative pl-[50px] py-3 mb-3 cursor-pointer border-solid border-1 border-(--slate-300);
 }
-.container input{
-    @apply absolute opacity-0 cursor-pointer h-0 w-0
+.container input {
+  @apply absolute opacity-0 cursor-pointer h-0 w-0;
 }
-.checkmark{
-    @apply absolute top-0 bottom-0 my-auto left-4 h-4 w-4 rounded-full bg-white border-1 border-solid border-(--slate-300)
+.checkmark {
+  @apply absolute top-0 bottom-0 my-auto left-4 h-4 w-4 rounded-full bg-white border-1 border-solid border-(--slate-300);
 }
 .container:hover {
-    @apply border-(--lime)
+  @apply border-(--lime);
 }
 
-.checkmark::after{
-    content: '';
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.container input:checked ~ .checkmark::after {
+  @apply block;
+}
+.container input:checked ~ .checkmark {
+  @apply border-(--lime);
+}
+.container .checkmark::after {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 8px;
+  width: 8px;
+  @apply rounded-full bg-(--lime);
+}
+.container:has(input:checked) {
+  @apply border-(--lime);
+  background: hsla(61, 70%, 52%, 0.15);
+}
+
+@media (min-width:768px) {
+  .month-repay-box ::after {
+    content: "";
     position: absolute;
-    display: none;
-}
-.container input:checked ~ .checkmark::after{
-    @apply block;
-}
-.container input:checked ~ .checkmark{
-    @apply border-(--lime);
-}
-.container .checkmark::after{
-    top:0;
-    bottom: 0;
-    left:0;
-    right: 0;
-    margin: auto;
-    height: 8px;
-    width: 8px;
-    @apply rounded-full bg-(--lime);
-}
-.container:has(input:checked){
-    @apply border-(--lime) ;
-    background:hsla(61, 70%, 52%,0.15)
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+
+    height: 1px;
+    width: 100%;
+    opacity: 0.1;
+    background-color: var(--slate-300);
+  }
 }
