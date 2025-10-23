@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Home() {
+     const base = import.meta.env.BASE_URL;
     const [form, setForm] = useState({
         mortAmt: "",
         mortTerm: "",
